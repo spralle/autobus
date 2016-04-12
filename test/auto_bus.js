@@ -74,6 +74,23 @@ describe('AutoBus', function() {
 			});
 		});		
 	});
+	describe('#leave', function() {
+		it('leave should remove listener', function(done) {
+			var bus = new AutoBus();
+			var count =0;
+			var callback = bus.join('test.command', function(m) {
+				count++;
+			});
+			
+			bus.publish('test.command', {x:1});
+			bus.leave('test.command', callback);
+			bus.publish('test.command', {x:1});
+			process.nextTick(function() {
+				count.should.equal(1);
+				done();
+			});
+		});
+	});
 	describe('#use', function() {
 		it('calls middleware', function(done) {
 			var bus = new AutoBus();
